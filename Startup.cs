@@ -44,6 +44,7 @@ namespace BankingServices
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.ConfigureDependencies();
+			services.ConfigureAuthenticationService(Configuration);
 
 			services.AddControllers(options =>
 			{
@@ -68,7 +69,7 @@ namespace BankingServices
 		/// <param name="app">application builder.</param>
 		/// <param name="env">web host environment.</param>
 		/// <param name="logger">instance of logger.</param>
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger logger)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
 			if (env.IsDevelopment())
 			{
