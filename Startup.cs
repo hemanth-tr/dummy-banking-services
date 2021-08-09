@@ -68,7 +68,6 @@ namespace BankingServices
 		/// </summary>
 		/// <param name="app">application builder.</param>
 		/// <param name="env">web host environment.</param>
-		/// <param name="logger">instance of logger.</param>
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
 			if (env.IsDevelopment())

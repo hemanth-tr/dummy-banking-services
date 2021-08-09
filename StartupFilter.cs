@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using BankingServices.MiddlewareComponents;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using System;
 
@@ -18,7 +19,8 @@ namespace BankingServices
 		{
 			return builder =>
 			{
-				// builder.UseMiddleware<middle-ware>();
+				// TODO: Add middleware builder.UseMiddleware<>();
+				builder.UseMiddleware<RequestLoggerMiddleware>();
 				next(builder);
 			};
 		}
