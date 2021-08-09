@@ -26,8 +26,8 @@ namespace BankingServices.Repository.SqlRepository
 			Logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
 			string connectionString = configuration.GetConnectionString("BankDB");
-
-            SqlConnection = new SqlConnection(connectionString);
+			
+			SqlConnection = new SqlConnection(connectionString);
 			Logger = logger;
 		}
 
