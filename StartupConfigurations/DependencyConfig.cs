@@ -13,9 +13,10 @@ namespace BankingServices.StartupConfigurations
         /// Method for configuring application dependencies.
         /// </summary>
         /// <param name="serviceCollection">service collection.</param>
-        public static void ConfigureDependencies(IServiceCollection serviceCollection)
+        public static IServiceCollection ConfigureDependencies(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IBankRepository, BankRepository>();
+            return serviceCollection;
         }
     }
 }

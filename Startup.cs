@@ -43,13 +43,14 @@ namespace BankingServices
 		/// <param name="services">collection of servies.</param>
 		public void ConfigureServices(IServiceCollection services)
 		{
-			DependencyConfig.ConfigureDependencies(services);
+			services.ConfigureDependencies();
 
 			services.AddControllers(options =>
 			{
 				options.ReturnHttpNotAcceptable = true;
 
 			}).AddXmlDataContractSerializerFormatters();
+
 			services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "BankingServices", Version = "v1" });
