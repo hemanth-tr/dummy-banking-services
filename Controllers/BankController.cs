@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace BankingServices.Controllers
 {
-    /// <summary>
-    /// Controller for bank.
-    /// </summary>
-    [ApiController]
+	/// <summary>
+	/// Controller for bank.
+	/// </summary>
+	[ApiController]
 	[Route("api/banks")]
 	public class BankController : ControllerBase
 	{
@@ -56,10 +56,10 @@ namespace BankingServices.Controllers
 				return Ok(result);
 			}
 			catch (Exception ex)
-            {
+			{
 				Logger.LogError($"Exception fetching banks. ExceptionMessage: {ex.Message}");
 				return StatusCode(500, "Internel server error");
-            }
+			}
 		}
 
 		/// <summary>
@@ -77,9 +77,9 @@ namespace BankingServices.Controllers
 
 			var result = await BankRepository.FetchBankAsync((x) => x.Id == id).ConfigureAwait(false);
 			if (result == null)
-            {
+			{
 				return NotFound(id);
-            }
+			}
 
 			return Ok(result);
 		}
@@ -117,7 +117,7 @@ namespace BankingServices.Controllers
 				}
 				else if (ex is ResourceCreationFailedException rcfEx)
 				{
-					ushort httpStatusCode = (ushort)HttpStatusCode.ServiceUnavailable; 
+					ushort httpStatusCode = (ushort)HttpStatusCode.ServiceUnavailable;
 					return StatusCode(httpStatusCode, rcfEx.Message);
 				}
 			}
@@ -133,34 +133,34 @@ namespace BankingServices.Controllers
 		/// <returns></returns>
 		[HttpPut("{id}", Name = "UpdateBankStatus")]
 		public async Task<IActionResult> UpdateBankStatusAsync(Guid id, [FromBody] string status)
-        {
+		{
 			if (id == Guid.Empty)
-            {
+			{
 				return BadRequest(id);
-            }
+			}
 
 			if (!Enum.TryParse(status, out Status bankStatus))
-            {
+			{
 				return BadRequest(status);
-            }
+			}
 
-            try
-            {
+			try
+			{
 				var result = await BankRepository.FetchBankAsync((x) => x.Id == id).ConfigureAwait(false);
 				if (result == null)
-                {
+				{
 					return NotFound(id);
-                }
+				}
 
 				await BankRepository.ChangeBankStatusAsync(result.Id, bankStatus).ConfigureAwait(false);
-            }
+			}
 			catch (Exception ex)
-            {
+			{
 				Logger.LogError(ex.Message);
 				return StatusCode(500, ex.Message);
-            }
+			}
 
 			return Ok();
-        }
+		}
 	}
 }

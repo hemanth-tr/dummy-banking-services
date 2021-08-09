@@ -26,7 +26,7 @@ namespace BankingServices.Repository.SqlRepository
 			Logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
 			string connectionString = configuration.GetConnectionString("BankDB");
-			
+
 			SqlConnection = new SqlConnection(connectionString);
 			Logger = logger;
 		}
@@ -34,7 +34,7 @@ namespace BankingServices.Repository.SqlRepository
 		/// <summary>
 		/// Gets or sets the instance of <see cref="ILogger"/>.
 		/// </summary>
-		private ILogger<BankRepository> Logger {  get; init;  }
+		private ILogger<BankRepository> Logger { get; init; }
 
 		/// <summary>
 		/// Gets or sets the instance of <see cref="SqlConnection"/> used to communicate with Sql server.
@@ -77,9 +77,9 @@ namespace BankingServices.Repository.SqlRepository
 				return mappedResult;
 			}
 			catch (Exception ex)
-            {
+			{
 				Logger.LogError($"Exception: {ex.Message}");
-            }
+			}
 			finally
 			{
 				SqlConnection.Close();
@@ -96,20 +96,20 @@ namespace BankingServices.Repository.SqlRepository
 		public async Task<BankInformation> FetchBankAsync(Func<BankInformation, bool> function)
 		{
 			try
-            {
+			{
 				var result = await FetchBanksAsync().ConfigureAwait(false);
 				var enumerator = result.GetEnumerator();
 				while (enumerator.MoveNext())
-                {
+				{
 					var bank = enumerator.Current as BankInformation;
 					if (function(bank))
-                    {
+					{
 						return bank;
-                    }
-                }
-            }
+					}
+				}
+			}
 			catch (Exception ex)
-            {
+			{
 				Logger.LogError($"Excepton: Message: {ex.Message}");
 			}
 
@@ -130,12 +130,12 @@ namespace BankingServices.Repository.SqlRepository
 		/// </exception>
 		public async Task<Guid> CreateBankAsync(Bank bank)
 		{
-            var command = new SqlCommand("CreateBank", SqlConnection)
-            {
-                CommandType = System.Data.CommandType.StoredProcedure
-            };
+			var command = new SqlCommand("CreateBank", SqlConnection)
+			{
+				CommandType = System.Data.CommandType.StoredProcedure
+			};
 
-            command.Parameters.AddWithValue("@acronym", bank.Acronym);
+			command.Parameters.AddWithValue("@acronym", bank.Acronym);
 			command.Parameters.AddWithValue("@name", bank.Name);
 
 			Guid id = Guid.Empty;
@@ -169,8 +169,8 @@ namespace BankingServices.Repository.SqlRepository
 		/// </summary>
 		/// <param name="id">bank id.</param>
 		/// <param name="status">status to be updated.</param>
-        public async Task ChangeBankStatusAsync(Guid id, Status status)
-        {
+		public async Task ChangeBankStatusAsync(Guid id, Status status)
+		{
 			var sqlCommand = new SqlCommand("ChangeBankStatus", SqlConnection)
 			{
 				CommandType = System.Data.CommandType.StoredProcedure
@@ -180,18 +180,18 @@ namespace BankingServices.Repository.SqlRepository
 			sqlCommand.Parameters.AddWithValue("@status", status);
 
 			try
-            {
+			{
 				SqlConnection.Open();
 				await sqlCommand.ExecuteNonQueryAsync().ConfigureAwait(false);
-            }
+			}
 			catch (SqlException ex)
-            {
+			{
 				throw new ResourceUpdateFailedException($"StatusUpdateFailed. Id:{id}, Status:{status}, Message:{ex.Message}");
-            }
+			}
 			finally
-            {
+			{
 				SqlConnection.Close();
-            }
-        }
-    }
+			}
+		}
+	}
 }

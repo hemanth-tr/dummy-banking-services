@@ -13,10 +13,10 @@ using System.Reflection;
 
 namespace BankingServices
 {
-    /// <summary>
-    /// Startup class for BankingServices.
-    /// </summary>
-    public class Startup
+	/// <summary>
+	/// Startup class for BankingServices.
+	/// </summary>
+	public class Startup
 	{
 		/// <summary>
 		/// Instantiates Startup class.
@@ -35,7 +35,7 @@ namespace BankingServices
 		/// <summary>
 		/// Gets or sets the logger instance.
 		/// </summary>
-		public ILogger Logger{ get; set; }
+		public ILogger Logger { get; set; }
 
 		/// <summary>
 		/// This method gets called by the runtime. Use this method to add services to the container.
