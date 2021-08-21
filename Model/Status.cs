@@ -12,5 +12,10 @@ namespace BankingServices.Model
         /// Created status.
         /// </summary>
         Created = 0,
+
+        /// <summary>
+        /// Created status.
+        /// </summary>
+        Active = 1,
     }
 }

@@ -75,7 +75,7 @@ namespace BankingServices.Controllers
 				return BadRequest();
 			}
 
-			var result = await BankRepository.FetchBankAsync((x) => x.Id == id).ConfigureAwait(false);
+			var result = await BankRepository.FetchBankAsync(id).ConfigureAwait(false);
 			if (result == null)
 			{
 				return NotFound(id);
@@ -129,24 +129,24 @@ namespace BankingServices.Controllers
 		/// Updates status for provided bank's id.
 		/// </summary>
 		/// <param name="id">bank's id.</param>
-		/// <param name="status">status to be updated <see cref="Status"/>.</param>
+		/// <param name="status">status of the bank involving one of { Created, Active }.</param>
 		/// <returns></returns>
-		[HttpPut("{id}", Name = "UpdateBankStatus")]
-		public async Task<IActionResult> UpdateBankStatusAsync(Guid id, [FromBody] string status)
+		[HttpPatch("{id}", Name = "UpdateBankStatus")]
+		public async Task<IActionResult> UpdateBankStatusAsync(Guid id, [FromBody] Status? status = null)
 		{
 			if (id == Guid.Empty)
 			{
 				return BadRequest(id);
 			}
 
-			if (!Enum.TryParse(status, out Status bankStatus))
+			if (!Enum.TryParse(status.ToString(), out Status bankStatus))
 			{
 				return BadRequest(status);
 			}
 
 			try
 			{
-				var result = await BankRepository.FetchBankAsync((x) => x.Id == id).ConfigureAwait(false);
+				var result = await BankRepository.FetchBankAsync(id).ConfigureAwait(false);
 				if (result == null)
 				{
 					return NotFound(id);

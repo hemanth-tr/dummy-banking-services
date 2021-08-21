@@ -76,9 +76,9 @@ namespace BankingServices.Repository.SqlRepository
 
 				return mappedResult;
 			}
-			catch (Exception ex)
+			catch (SqlException ex)
 			{
-				Logger.LogError($"Exception: {ex.Message}");
+				ex.ThrowException();
 			}
 			finally
 			{
@@ -91,26 +91,51 @@ namespace BankingServices.Repository.SqlRepository
 		/// <summary>
 		/// Returns the bank information if delegate succeeds.
 		/// </summary>
-		/// <param name="function">delegates which has logic for information matching.</param>
+		/// <param name="id">unique identifier of bank.</param>
 		/// <returns>bank information.</returns>
-		public async Task<BankInformation> FetchBankAsync(Func<BankInformation, bool> function)
+		public async Task<BankInformation> FetchBankAsync(Guid id)
 		{
+			var command = new SqlCommand("GetBank", SqlConnection)
+			{
+				CommandType = System.Data.CommandType.StoredProcedure, 
+			};
+
+			command.Parameters.AddWithValue("id", id);
+
 			try
 			{
-				var result = await FetchBanksAsync().ConfigureAwait(false);
-				var enumerator = result.GetEnumerator();
-				while (enumerator.MoveNext())
+				SqlConnection.Open();
+				var result = await command.ExecuteReaderAsync().ConfigureAwait(false);
+				if (!result.HasRows)
 				{
-					var bank = enumerator.Current as BankInformation;
-					if (function(bank))
-					{
-						return bank;
-					}
+					return null;
 				}
+
+				_ = result.ReadAsync();
+
+				var bankId = result["Id"].ToString();
+				var bankName = result["Name"].ToString();
+				var acronym = result["Acronym"].ToString();
+				var status = result["Status"].ToString();
+				var isParsingSuccessfull = Enum.TryParse(status, out Status bankStatus);
+
+				var bank = new BankInformation
+				{
+					Id = Guid.Parse(bankId),
+					Name = bankName,
+					Acronym = acronym,
+					Status = isParsingSuccessfull ? bankStatus : null
+				};
+
+				return bank;
 			}
-			catch (Exception ex)
+			catch (SqlException ex)
 			{
-				Logger.LogError($"Excepton: Message: {ex.Message}");
+				ex.ThrowException();
+			}
+			finally
+			{
+				SqlConnection.Close();
 			}
 
 			return null;

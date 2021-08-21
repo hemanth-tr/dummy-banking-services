@@ -19,9 +19,9 @@ namespace BankingServices.Repository
 		/// <summary>
 		/// Retrieves the list of banks.
 		/// </summary>
-		/// <param name="function">delegate which has logic for information match.</param>
+		/// <param name="id">Unique identifier for bank.</param>
 		/// <returns>bank information.</returns>
-		Task<BankInformation> FetchBankAsync(Func<BankInformation, bool> function);
+		Task<BankInformation> FetchBankAsync(Guid id);
 
 		/// <summary>
 		/// Creates a bank.
